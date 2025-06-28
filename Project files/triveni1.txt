@@ -1,0 +1,45 @@
+import random
+import pandas as pd
+import matplotlib.pyplot as plt
+import requests
+from io import BytesIO
+
+# Sample butterfly species data
+butterfly_data = [
+    {
+        "name": "Blue Morpho",
+        "scientific_name": "Morpho menelaus",
+        "habitat": "Tropical forests of South and Central America",
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/00/Morpho_menelaus_MHNT_dos.jpg"
+    },
+    {
+        "name": "Monarch Butterfly",
+        "scientific_name": "Danaus plexippus",
+        "habitat": "North America, migrating to Central Mexico",
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/d/d1/Monarch_In_May.jpg"
+    },
+    {
+        "name": "Glasswing Butterfly",
+        "scientific_name": "Greta oto",
+        "habitat": "Central and South America",
+        "image_url": "https://upload.wikimedia.org/wikipedia/commons/1/13/Greta_oto1.jpg"
+    }
+]
+
+def display_butterfly(butterfly):
+    print("\n✨ Enchanted Wings Spotlight ✨")
+    print(f"🦋 Name: {butterfly['name']}")
+    print(f"🔬 Scientific Name: {butterfly['scientific_name']}")
+    print(f"🌍 Habitat: {butterfly['habitat']}")
+    
+    # Display image
+    response = requests.get(butterfly["image_url"])
+    img = plt.imread(BytesIO(response.content), format='jpg')
+    plt.imshow(img)
+    plt.title(butterfly["name"])
+    plt.axis('off')
+    plt.show()
+
+# Choose a random butterfly
+chosen_butterfly = random.choice(butterfly_data)
+display_butterfly(chosen_butterfly)
