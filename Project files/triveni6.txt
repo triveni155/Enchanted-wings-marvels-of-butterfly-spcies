@@ -1,0 +1,66 @@
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import accuracy_score, classification_report
+import joblib
+import matplotlib.pyplot as plt
+from sklearn import tree
+
+# Step 1: Create the dataset
+data = {
+    "Wingspan_cm": [15, 10, 6, 7.5, 7, 14, 8, 5],
+    "Colorfulness": [0.9, 0.6, 0.5, 0.65, 0.7, 0.95, 0.6, 0.4],
+    "Region_Code": [1, 2, 3, 4, 5, 6, 3, 2],
+    "Species": [
+        "Blue Morpho", "Monarch", "Glasswing", "Painted Lady",
+        "Peacock", "Ulysses", "Zebra Longwing", "Common Buckeye"
+    ]
+}
+
+df = pd.DataFrame(data)
+
+# Step 2: Encode target labels
+le = LabelEncoder()
+df["Species_Label"] = le.fit_transform(df["Species"])
+
+# Step 3: Split the data
+X = df[["Wingspan_cm", "Colorfulness", "Region_Code"]]
+y = df["Species_Label"]
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Step 4: Build and train the model
+model = DecisionTreeClassifier(max_depth=4, random_state=42)
+model.fit(X_train, y_train)
+
+# Step 5: Evaluate the model
+y_pred = model.predict(X_test)
+print("🎯 Accuracy:", accuracy_score(y_test, y_pred))
+print("📊 Classification Report:")
+print(classification_report(y_test, y_pred, target_names=le.classes_))
+
+# Step 6: Visualize the tree
+plt.figure(figsize=(12, 6))
+tree.plot_tree(model, feature_names=X.columns, class_names=le.classes_, filled=True)
+plt.title("🦋 Butterfly Species Classifier Tree")
+plt.show()
+
+# Step 7: Save the model and label encoder
+joblib.dump(model, "butterfly_species_model.pkl")
+joblib.dump(le, "label_encoder.pkl")
+print("✅ Model and encoder saved.")
+
+# Step 8: Function to predict species
+def predict_butterfly_species(wingspan, colorfulness, region_code):
+    input_data = np.array([[wingspan, colorfulness, region_code]])
+    loaded_model = joblib.load("butterfly_species_model.pkl")
+    loaded_encoder = joblib.load("label_encoder.pkl")
+    pred_label = loaded_model.predict(input_data)[0]
+    species_name = loaded_encoder.inverse_transform([pred_label])[0]
+    return species_name
+
+# Step 9: Make a prediction
+sample_prediction = predict_butterfly_species(9, 0.7, 2)
+print(f"🔮 Predicted species: {sample_prediction}")
