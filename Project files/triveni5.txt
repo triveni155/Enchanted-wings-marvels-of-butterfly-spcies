@@ -1,0 +1,9 @@
+import joblib
+
+# Save the trained decision tree model
+joblib.dump(model, "butterfly_species_model.pkl")
+
+# Save the LabelEncoder (for decoding predictions)
+joblib.dump(le, "label_encoder.pkl")
+
+print("✅ Model and encoder saved!")
