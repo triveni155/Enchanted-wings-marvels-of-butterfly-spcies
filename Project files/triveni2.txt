@@ -1,0 +1,32 @@
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Set style
+sns.set(style="whitegrid")
+
+# 1. Wingspan distribution
+plt.figure(figsize=(8, 5))
+sns.barplot(x="Species", y="Wingspan_cm", data=df, palette="viridis")
+plt.title("🦋 Butterfly Wingspan by Species")
+plt.ylabel("Wingspan (cm)")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+# 2. Habitat Region Count
+plt.figure(figsize=(6, 4))
+sns.countplot(x="Habitat_Region", data=df, palette="Set2", order=df["Habitat_Region"].value_counts().index)
+plt.title("🌍 Butterfly Species by Habitat Region")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+# 3. Scatterplot of Wingspan by Habitat
+plt.figure(figsize=(8, 5))
+sns.stripplot(x="Habitat_Region", y="Wingspan_cm", data=df, jitter=True, hue="Species", palette="deep", size=8)
+plt.title("🌸 Wingspan Spread Across Habitats")
+plt.ylabel("Wingspan (cm)")
+plt.xticks(rotation=45)
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2)
+plt.tight_layout()
+plt.show()
